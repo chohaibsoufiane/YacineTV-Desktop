@@ -1,6 +1,16 @@
 # YacineTV-Desktop
 
-Native macOS desktop client for Yacine TV built with SwiftUI, AVKit, MetalFX, and a local Python HLS proxy backend.
+Native desktop client for Yacine TV built with Swift (`main` for macOS, [`windows`](https://github.com/chohaibsoufiane/YacineTV-Desktop/tree/windows) branch for Windows) and a local Python HLS proxy backend.
+
+## Releases
+
+Latest release: **[Yacine TV 3.1 (Build 56)](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases/tag/v3.1)** · [All Releases](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases)
+
+| Platform | Asset | Branch | SHA-256 |
+| :--- | :--- | :--- | :--- |
+| **macOS** (Apple Silicon `arm64`) | [`YacineTV-3.1-b56-arm64.dmg`](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases/download/v3.1/YacineTV-3.1-b56-arm64.dmg) | `main` | `8c36b6e9a4aa016f8b05e9b1547368cd2f997bc0b6631f3414358b9be0c53d2c` |
+| **macOS** (Apple Silicon `.zip`) | [`YacineTV-3.1-b56-arm64.zip`](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases/download/v3.1/YacineTV-3.1-b56-arm64.zip) | `main` | `62a24134b7a599057549a44d0b551d65972f5b64f2a865e626ff21f25d4a0441` |
+| **Windows** (`x64` Portable `.zip`) | [`YacineTV-3.1-win64.zip`](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases/download/v3.1/YacineTV-3.1-win64.zip) | [`windows`](https://github.com/chohaibsoufiane/YacineTV-Desktop/tree/windows) | `14b37f8ced1096363051b034ba670608c4d9fd42b41b169f8188efb997208879` |
 
 ## Screenshots
 
@@ -28,8 +38,9 @@ Native macOS desktop client for Yacine TV built with SwiftUI, AVKit, MetalFX, an
 
 ## Build & Run
 
-Prebuilt Apple Silicon bundles are available on [Releases](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases).
+Prebuilt bundles for macOS (`arm64`) and Windows (`x64`) are available on [Releases](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases).
 
+### macOS (`main`)
 Build and install `/Applications/Yacine TV.app` from source:
 
 ```zsh
@@ -37,6 +48,15 @@ git clone https://github.com/chohaibsoufiane/YacineTV-Desktop.git
 cd YacineTV-Desktop
 ./build.sh
 open "/Applications/Yacine TV.app"
+```
+
+### Windows ([`windows`](https://github.com/chohaibsoufiane/YacineTV-Desktop/tree/windows) branch)
+Build and package portable `build\YacineTV-Windows\YacineTV.exe` with Swift 6 for Windows and WebView2:
+
+```powershell
+git clone -b windows https://github.com/chohaibsoufiane/YacineTV-Desktop.git
+cd YacineTV-Desktop
+.\build.ps1 -Run
 ```
 
 Run the backend and browser UI standalone on port `19485` (`YACINE_PORT` overrides the port):
