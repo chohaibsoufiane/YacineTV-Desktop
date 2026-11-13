@@ -1,0 +1,71 @@
+# Secrets and local environment files
+.env
+.env.*
+*.env
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.keystore
+*.jks
+*.mobileprovision
+*.provisionprofile
+google-services.json
+GoogleService-Info.plist
+
+# Build outputs and release archives
+build/
+dist/
+.build/
+.swiftpm/
+DerivedData/
+*.app/
+*.dmg
+*.zip
+*.pkg
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.xcarchive/
+
+# Xcode and editor metadata
+*.xcworkspace/
+xcuserdata/
+*.xcuserstate
+*.xcuserdata
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# macOS and runtime caches
+.DS_Store
+**/.DS_Store
+._*
+.AppleDouble
+.LSOverride
+yacine_tv_logos/
+fsCachedData/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite*
+
+# Python bytecode and virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+venv/
+.venv/
+ENV/
+.pytest_cache/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+tmp/
