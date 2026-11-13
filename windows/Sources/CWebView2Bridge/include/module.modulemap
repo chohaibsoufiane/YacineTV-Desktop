@@ -1,0 +1,4 @@
+module CWebView2Bridge {
+    header "CWebView2Bridge.h"
+    export *
+}

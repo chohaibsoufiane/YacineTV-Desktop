@@ -1,6 +1,6 @@
 # YacineTV-Desktop
 
-Native macOS desktop client for Yacine TV built with SwiftUI, AVKit, MetalFX, and a local Python HLS proxy backend.
+Native macOS and Windows desktop client for Yacine TV built with Swift, hardware-accelerated video pipelines, and a local Python HLS proxy backend.
 
 ## Screenshots
 
@@ -17,19 +17,27 @@ Native macOS desktop client for Yacine TV built with SwiftUI, AVKit, MetalFX, an
 - **Native macOS UI**: SwiftUI interface using macOS Liquid Glass (`ConcentricRectangle`, `GlassEffectContainer`), Light/Dark/Auto themes with synced Dock icons, live match schedule (`Upcoming`, `Live`, `Ended`), channel search, and persistent favorites.
 - **Hardware Playback & MetalFX**: `AVPlayerView` HLS playback with Picture-in-Picture, `16:9 Fit` / `Widescreen Fill` / `Stretch` modes, fullscreen quality HUD, and GPU-accelerated `MetalFX` spatial upscaling paired with an RCAS Metal fragment shader (`Off`, `Auto (< 720p)`, `Always On`).
 - **Local Crypto & HLS Proxy** (`backend/server.py`): Pure standard-library Python server on `127.0.0.1:19485` handling payload decryption (`pk_dec`/`pk_enc`), `wmsAuthSign` token signing (`pk_wma`), multi-host API failover (with optional `YACINE_FIREBASE_*` remote config env vars), concurrent stream probing, master playlist variant selection (`/api/variants`), M3U8 rewriting (`/proxy/m3u8`), and keep-alive segment relaying (`/proxy/seg.ts`).
-- **Web Embed Fallback**: `WKWebView` sniffer in `LiveWebPlayerView` captures runtime media URLs and cookies from embedded players to promote streams into `AVPlayer`, alongside a standalone web UI in `ui/`.
+- **Web Embed Fallback**: `WKWebView` sniffer in `LiveWebPlayerView` on macOS (and dual-`ICoreWebView2` bridge in `WebSnifferController` on Windows) captures runtime media URLs and cookies from embedded players to promote streams into HLS playback, alongside a standalone web UI in `ui/`.
+- **Native Windows UI (`windows/`)**: Swift 6 for Windows (`WinSDK` + `CWebView2Bridge` C++ bridge) featuring DWM dark/light titlebars & synced window icons, Job Object supervision of `backend/server.py`, borderless fullscreen HUD, strict `/api/variants` quality switching, and a WebGL2 RCAS upscaling shader.
 
 ## Requirements
 
+### macOS
 - macOS 26 or newer on Apple Silicon (`arm64`)
 - Xcode Command Line Tools (`swiftc`)
 - Python 3.9+ (standard library only)
 - Optional: Apple Icon Composer (`ictool`) if rebuilding `assets/AppIcon.icns` from `assets/yacineTV.icon`
 
+### Windows
+- Windows 10 or Windows 11 (`x64`) with Microsoft Edge WebView2 Runtime
+- Swift for Windows 6.x (`winget install Swift.Toolchain`) + Visual Studio 2022 Build Tools (`VC.Tools.x86.x64` & Windows 11 SDK)
+- Python 3.10+ (standard library at runtime; `Pillow` if regenerating `.ico` files)
+
 ## Build & Run
 
-Prebuilt Apple Silicon bundles are available on [Releases](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases).
+Prebuilt bundles are available on [Releases](https://github.com/chohaibsoufiane/YacineTV-Desktop/releases).
 
+### macOS
 Build and install `/Applications/Yacine TV.app` from source:
 
 ```zsh
@@ -37,6 +45,15 @@ git clone https://github.com/chohaibsoufiane/YacineTV-Desktop.git
 cd YacineTV-Desktop
 ./build.sh
 open "/Applications/Yacine TV.app"
+```
+
+### Windows
+Build and package portable `build\YacineTV-Windows\YacineTV.exe`:
+
+```powershell
+git clone https://github.com/chohaibsoufiane/YacineTV-Desktop.git
+cd YacineTV-Desktop
+.\build.ps1 -Run
 ```
 
 Run the backend and browser UI standalone on port `19485` (`YACINE_PORT` overrides the port):
@@ -56,11 +73,13 @@ swift scripts/render_icons.swift
 | Path | Description |
 | :--- | :--- |
 | `macos/YacineTVApp.swift` | Native SwiftUI application, AVKit player, MetalFX shader pipeline, and WKWebView sniffer |
+| `windows/` | Native Swift 6 for Windows package (`YacineTV` + `CWebView2Bridge`), icon generator, and resources |
 | `backend/server.py` | Local API client, stream prober, M3U8 rewriter, and segment proxy |
-| `ui/` | Standalone HTML/CSS/JS client (`hls.min.js`) served at `http://127.0.0.1:19485` |
+| `ui/` | Adaptive Light/Dark/Auto HTML/CSS/JS client (`hls.min.js` + WebGL2 RCAS shader) served at `http://127.0.0.1:19485` |
 | `assets/` | App icons (`AppIcon.icns`, Dark/Light variants) and `yacineTV.icon` source |
 | `scripts/render_icons.swift` | Iconset and PNG generator via `ictool` and `iconutil` |
-| `build.sh` | Compiles, packages, ad-hoc signs, and installs `Yacine TV.app` |
+| `build.sh` | macOS build: compiles, packages, ad-hoc signs, and installs `Yacine TV.app` |
+| `build.ps1` | Windows build: downloads WebView2 SDK, builds icons/resources, compiles release Swift package, and packages `build\YacineTV-Windows\` |
 
 ## Disclaimer
 

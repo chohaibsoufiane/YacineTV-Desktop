@@ -69,3 +69,8 @@ ENV/
 *.tmp
 *.bak
 tmp/
+
+# Windows build dependencies and compiled resources
+**/.build/
+windows/.deps/
+windows/Resources/*.res
